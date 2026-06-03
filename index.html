@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="متجر انالورا - حيث يلتقي الأناقة بالذكاء">
+    <meta name="keywords" content="ملابس، أزياء، نسائي، رجالي، متجر أونلاين">
+    <title>Analora Store - متجر انالورا</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+    <!-- ===== LOADING ===== -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header hidden" id="main-header">
+        <div class="header-logo" onclick="showPage('home-page')" title="العودة للرئيسية">ANALORA</div>
+        <div class="language-switcher">
+            <button class="lang-btn active" data-lang="ar" onclick="setLanguage('ar')">عربي</button>
+            <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">English</button>
+        </div>
+        <div class="header-icons">
+            <i class="fas fa-search" onclick="toggleSearch()" title="بحث"></i>
+            <i class="fas fa-heart" onclick="showPage('wishlist-page')" title="قائمة المفضلة">
+                <span class="wish-count" id="wish-count">0</span>
+            </i>
+            <i class="fas fa-shopping-bag" onclick="showPage('cart-page')" title="السلة">
+                <span class="cart-count" id="cart-count">0</span>
+            </i>
+        </div>
+    </header>
+
+    <!-- ===== SEARCH BAR ===== -->
+    <div class="search-bar" id="search-bar">
+        <div class="search-input-wrapper">
+            <input type="text" class="search-input" id="search-input" placeholder="ابحث عن منتج..." oninput="handleSearch(this.value)">
+            <button class="search-icon-btn" onclick="toggleSearch()" title="إغلاق"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="search-results" id="search-results"></div>
+    </div>
+
+    <!-- ===== WELCOME PAGE ===== -->
+    <section id="welcome-page" class="page active">
+        <h1>ANALORA</h1>
+        <p class="tagline" id="site-tagline">Style Meets Intelligence</p>
+        <button id="welcome-button" class="btn-main" onclick="showPage('selection-page')">SHOPPING NOW</button>
+    </section>
+
+    <!-- ===== SELECTION PAGE ===== -->
+    <section id="selection-page" class="page">
+        <h2 class="section-title" id="selection-title">اختار مجموعتك من ANALORA</h2>
+        <div class="selection-container">
+            <button class="gender-card gender-card-women" onclick="showPage('women-page')">
+                <div class="gender-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1511919884226-9e5e4e6baa83?auto=format&fit=crop&w=900&q=80" alt="Men's product collection">
+                </div>
+                <div class="gender-card-body">
+                    <div class="gender-card-title" id="women-card-title">ANALORA WOMEN</div>
+                    <div class="gender-card-copy" id="women-card-copy">اكتشفي أحدث صيحات الموضة مع لمسات أنثوية جذابة وتصاميم عصرية راقية.</div>
+                    <div class="gender-card-cta"><span id="women-card-cta">تسوقي الآن</span> <i class="fas fa-arrow-left"></i></div>
+                </div>
+            </button>
+            <button class="gender-card gender-card-men" onclick="showPage('men-page')">
+                <div class="gender-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80" alt="Men's fashion collection">
+                </div>
+                <div class="gender-card-body">
+                    <div class="gender-card-title" id="men-card-title">ANALORA MEN</div>
+                    <div class="gender-card-copy" id="men-card-copy">استكشف تشكيلات رجالية أنيقة، مريحة، وتتماشى مع كل مناسباتك اليومية.</div>
+                    <div class="gender-card-cta"><span id="men-card-cta">تسوق الآن</span> <i class="fas fa-arrow-left"></i></div>
+                </div>
+            </button>
+        </div>
+        <div class="back-link" id="selection-back-link" onclick="showPage('welcome-page')">
+            <i class="fas fa-arrow-right"></i> العودة للرئيسية
+        </div>
+    </section>
+
+    <!-- ===== HOME PAGE ===== -->
+    <section id="home-page" class="page">
+        <div class="home-container">
+            <div class="hero-banner">
+                <div class="hero-content">
+                    <div class="hero-discount" id="hero-discount">25%</div>
+                    <div class="hero-text" id="hero-text">خصم على الوصلات الجديدة</div>
+                    <button id="hero-button" class="hero-btn" onclick="showPage('women-page')">تسوق الآن</button>
+                </div>
+                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop" class="hero-img" alt="عرض خاص">
+            </div>
+            <div class="shop-by-category">
+                <div class="section-header">
+                    <h3 id="categories-title">تسوق حسب الفئة</h3>
+                </div>
+                <div class="category-row">
+                    <div class="category-icon-item" onclick="showProducts('women','dresses')">
+                        <div class="category-icon-circle"><i class="fas fa-female"></i></div>
+                        <span class="category-icon-label" id="category-dresses">فساتين</span>
+                    </div>
+                    <div class="category-icon-item" onclick="showProducts('women','tops')">
+                        <div class="category-icon-circle"><i class="fas fa-tshirt"></i></div>
+                        <span class="category-icon-label" id="category-tops">بلوزات</span>
+                    </div>
+                    <div class="category-icon-item" onclick="showProducts('women','bottoms')">
+                        <div class="category-icon-circle"><i class="fas fa-socks"></i></div>
+                        <span class="category-icon-label" id="category-bottoms">بناطيل</span>
+                    </div>
+                    <div class="category-icon-item" onclick="showProducts('women','shoes-bags')">
+                        <div class="category-icon-circle"><i class="fas fa-shoe-prints"></i></div>
+                        <span class="category-icon-label" id="category-shoes">أحذية</span>
+                    </div>
+                    <div class="category-icon-item" onclick="showProducts('women','shoes-bags')">
+                        <div class="category-icon-circle"><i class="fas fa-shopping-bag"></i></div>
+                        <span class="category-icon-label" id="category-bags">حقائب</span>
+                    </div>
+                </div>
+            </div>
+            <div class="recommended-section">
+                <div class="section-header">
+                    <h3 id="recommended-title">موصى به لك</h3>
+                    <span class="see-all" id="recommended-see-all" onclick="showPage('women-page')">عرض الكل</span>
+                </div>
+                <div class="products-scroll" id="recommended-products"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WOMEN CATEGORIES ===== -->
+    <section id="women-page" class="page">
+        <h2 class="section-title">Analora Women</h2>
+        <div class="categories-grid">
+            <div class="category-card" onclick="showProducts('women', 'dresses')">Dresses</div>
+            <div class="category-card" onclick="showProducts('women', 'tops')">Tops</div>
+            <div class="category-card" onclick="showProducts('women', 'bottoms')">Bottoms</div>
+            <div class="category-card" onclick="showProducts('women', 'shoes-bags')">Shoes & Bags</div>
+        </div>
+        <div class="back-link" onclick="showPage('selection-page')">
+            <i class="fas fa-arrow-right"></i> رجوع للاختيارات
+        </div>
+    </section>
+
+    <!-- ===== MEN CATEGORIES ===== -->
+    <section id="men-page" class="page">
+        <h2 class="section-title">Analora Men</h2>
+        <div class="categories-grid">
+            <div class="category-card" onclick="showProducts('men', 'shirts')">Shirts</div>
+            <div class="category-card" onclick="showProducts('men', 'tshirts')">T-shirts</div>
+            <div class="category-card" onclick="showProducts('men', 'suits')">Suits</div>
+            <div class="category-card" onclick="showProducts('men', 'shoes')">Shoes</div>
+        </div>
+        <div class="back-link" onclick="showPage('selection-page')">
+            <i class="fas fa-arrow-right"></i> رجوع للاختيارات
+        </div>
+    </section>
+
+    <!-- ===== PRODUCTS PAGE ===== -->
+    <section id="products-page" class="page">
+        <h2 class="section-title" id="products-title">المنتجات</h2>
+        <div class="products-grid" id="products-grid"></div>
+        <div class="back-link" id="products-back" onclick="goBackFromProducts()">
+            <i class="fas fa-arrow-right"></i> رجوع للأقسام
+        </div>
+    </section>
+
+    <!-- ===== PRODUCT DETAIL PAGE ===== -->
+    <section id="product-detail-page" class="page">
+        <div class="product-detail" id="product-detail-content"></div>
+        <div class="back-link" onclick="showPage('products-page')">
+            <i class="fas fa-arrow-right"></i> رجوع للمنتجات
+        </div>
+    </section>
+
+    <!-- ===== CART PAGE ===== -->
+    <section id="cart-page" class="page">
+        <h2 class="section-title">🛒 سلة التسوق</h2>
+        <div class="cart-container" id="cart-container">
+            <p class="empty-cart">السلة فارغة</p>
+        </div>
+        <div class="back-link" onclick="showPage('products-page')">
+            <i class="fas fa-arrow-right"></i> مواصلة التسوق
+        </div>
+    </section>
+
+    <!-- ===== CHECKOUT PAGE ===== -->
+    <section id="checkout-page" class="page">
+        <h2 class="section-title">📦 إتمام الطلب</h2>
+        <div class="checkout-container" id="checkout-container">
+            <div class="checkout-section">
+                <div class="checkout-section-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    عنوان التوصيل
+                    <button class="change-btn auto-start">تغيير</button>
+                </div>
+                <div class="address-card active">
+                    <div class="address-name">سارة أحمد</div>
+                    <div class="address-details">١٢ شارع محمد فريد، القاهرة، مصر</div>
+                    <div class="address-phone">+20 100 123 4567</div>
+                </div>
+            </div>
+            <div class="checkout-section">
+                <div class="checkout-section-title">
+                    <i class="fas fa-clipboard-list"></i>
+                    ملخص الطلب
+                </div>
+                <div id="checkout-items"></div>
+                <div id="checkout-summary" class="summary-divider"></div>
+            </div>
+            <div class="checkout-section">
+                <div class="checkout-section-title">
+                    <i class="fas fa-credit-card"></i>
+                    طريقة الدفع
+                </div>
+                <label class="payment-method active" for="payment-cod" onclick="selectPayment(this)">
+                    <input type="radio" id="payment-cod" name="payment" checked title="الدفع عند الاستلام">
+                    <div class="payment-icon"><i class="fas fa-money-bill-wave"></i></div>
+                    <div class="payment-label">الدفع عند الاستلام</div>
+                </label>
+                <label class="payment-method" for="payment-card" onclick="selectPayment(this)">
+                    <input type="radio" id="payment-card" name="payment" title="بطاقة ائتمان">
+                    <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
+                    <div class="payment-label">بطاقة ائتمان</div>
+                    <div class="payment-logo">VISA / MasterCard</div>
+                </label>
+                <label class="payment-method" for="payment-vf" onclick="selectPayment(this)">
+                    <input type="radio" id="payment-vf" name="payment" title="فودافون كاش">
+                    <div class="payment-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="payment-label">فودافون كاش</div>
+                </label>
+            </div>
+            <div class="checkout-section">
+                <div class="checkout-section-title">
+                    <i class="fas fa-tag"></i>
+                    كود الخصم
+                </div>
+                <div class="promo-input-wrapper">
+                    <input type="text" class="promo-input" placeholder="أدخل كود الخصم">
+                    <button class="promo-btn">تطبيق</button>
+                </div>
+            </div>
+            <button class="btn-place-order" onclick="placeOrder()">
+                <i class="fas fa-lock"></i>
+                <span id="place-order-text">إتمام الطلب</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== WISHLIST PAGE ===== -->
+    <section id="wishlist-page" class="page">
+        <h2 class="section-title">❤️ قائمة المفضلة</h2>
+        <div class="wishlist-grid" id="wishlist-grid"></div>
+        <div class="back-link" onclick="showPage('products-page')">
+            <i class="fas fa-arrow-right"></i> مواصلة التسوق
+        </div>
+    </section>
+
+    <!-- ===== PROFILE PAGE ===== -->
+    <section id="profile-page" class="page">
+        <div class="profile-container">
+            <div class="profile-header">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200" class="profile-avatar" alt="صورة المستخدم">
+                <div class="profile-info">
+                    <div class="profile-name">سارة أحمد</div>
+                    <div class="profile-handle">@analora_user</div>
+                </div>
+                <button class="profile-edit-btn" aria-label="تعديل الملف الشخصي" title="تعديل الملف الشخصي"><i class="fas fa-pen"></i></button>
+            </div>
+            <div class="profile-menu">
+                <div class="profile-menu-item" onclick="showPage('orders-page')">
+                    <div class="profile-menu-icon"><i class="fas fa-file-invoice"></i></div>
+                    <div class="profile-menu-label">طلباتي</div>
+                    <div class="profile-menu-arrow"><i class="fas fa-chevron-left"></i></div>
+                </div>
+                <div class="profile-menu-item" onclick="showPage('wishlist-page')">
+                    <div class="profile-menu-icon"><i class="fas fa-heart"></i></div>
+                    <div class="profile-menu-label">المفضلة</div>
+                    <div class="profile-menu-arrow"><i class="fas fa-chevron-left"></i></div>
+                </div>
+                <div class="profile-menu-item">
+                    <div class="profile-menu-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="profile-menu-label">العناوين</div>
+                    <div class="profile-menu-arrow"><i class="fas fa-chevron-left"></i></div>
+                </div>
+                <div class="profile-menu-item">
+                    <div class="profile-menu-icon"><i class="fas fa-credit-card"></i></div>
+                    <div class="profile-menu-label">طرق الدفع</div>
+                    <div class="profile-menu-arrow"><i class="fas fa-chevron-left"></i></div>
+                </div>
+                <div class="profile-menu-item" onclick="showPage('analytics-page')">
+                    <div class="profile-menu-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="profile-menu-label">تحليل سلوكي</div>
+                    <div class="profile-menu-arrow"><i class="fas fa-chevron-left"></i></div>
+                </div>
+                <div class="profile-menu-item">
+                    <div class="profile-menu-icon"><i class="fas fa-cog"></i></div>
+                    <div class="profile-menu-label">الإعدادات</div>
+                    <div class="profile-menu-arrow"><i class="fas fa-chevron-left"></i></div>
+                </div>
+                <div class="profile-menu-item">
+                    <div class="profile-menu-icon"><i class="fas fa-question-circle"></i></div>
+                    <div class="profile-menu-label">المساعدة والدعم</div>
+                    <div class="profile-menu-arrow"><i class="fas fa-chevron-left"></i></div>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== ORDERS PAGE ===== -->
+    <section id="orders-page" class="page">
+        <h2 class="section-title">📋 طلباتي</h2>
+        <div class="checkout-container" id="orders-container">
+            <div class="checkout-section">
+                <div class="order-item">
+                    <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=200" class="order-item-img" alt="طلب">
+                    <div class="order-item-info">
+                        <div class="order-item-name">طلب #1234</div>
+                        <div class="order-item-meta">فستان سهرة أنيق - مقاس M</div>
+                    </div>
+                    <div class="order-item-price">١٢٩٩ ج.م</div>
+                </div>
+                <div class="status-row">
+                    <span class="status-text status-success"><i class="fas fa-check-circle"></i> تم التوصيل</span>
+                    <span class="status-text status-date">٢٠٢٦/٠٤/١٥</span>
+                </div>
+            </div>
+            <div class="checkout-section">
+                <div class="order-item">
+                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200" class="order-item-img" alt="طلب">
+                    <div class="order-item-info">
+                        <div class="order-item-name">طلب #1235</div>
+                        <div class="order-item-meta">تيشيرت أساسي أسود - مقاس L</div>
+                    </div>
+                    <div class="order-item-price">٢٤٩ ج.م</div>
+                </div>
+                <div class="status-row">
+                    <span class="status-text status-warning"><i class="fas fa-shipping-fast"></i> قيد الشحن</span>
+                    <span class="status-text status-date">٢٠٢٦/٠٥/٠١</span>
+                </div>
+            </div>
+        </div>
+        <div class="back-link" onclick="showPage('profile-page')">
+            <i class="fas fa-arrow-right"></i> رجوع للملف الشخصي
+        </div>
+    </section>
+
+    <!-- ===== ANALYTICS PAGE ===== -->
+    <section id="analytics-page" class="page">
+        <div class="analytics-container">
+            <div class="analytics-header">
+                <h2>📊 تحليل سلوك المستهلك</h2>
+                <p>رؤى عميقة حول تفضيلاتك وعادات شرائك</p>
+            </div>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon brown"><i class="fas fa-shopping-bag"></i></div>
+                    <div class="kpi-value" id="kpi-orders">12</div>
+                    <div class="kpi-label">جلسات الشراء</div>
+                    <div class="kpi-change positive"><i class="fas fa-arrow-up"></i> +25% هذا الشهر</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon green"><i class="fas fa-wallet"></i></div>
+                    <div class="kpi-value" id="kpi-spent">8,450</div>
+                    <div class="kpi-label">قيمة الصفحات (مشتريات)</div>
+                    <div class="kpi-change positive"><i class="fas fa-arrow-up"></i> +15% هذا الشهر</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon red"><i class="fas fa-heart"></i></div>
+                    <div class="kpi-value" id="kpi-wishlist">8</div>
+                    <div class="kpi-label">الزوار العائدون</div>
+                    <div class="kpi-change negative"><i class="fas fa-arrow-down"></i> -2 هذا الأسبوع</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon gold"><i class="fas fa-percentage"></i></div>
+                    <div class="kpi-value" id="kpi-discount">35%</div>
+                    <div class="kpi-label">معدل التحويل للشراء</div>
+                    <div class="kpi-change positive"><i class="fas fa-arrow-up"></i> +5% هذا الشهر</div>
+                </div>
+            </div>
+            <div class="chart-section">
+                <div class="chart-header">
+                    <div class="chart-title">📅 الجلسات والمشتريات حسب الشهر</div>
+                    <div class="chart-filter">
+                        <button class="filter-btn active" onclick="updateSpendingChart('6months', this)">٦ أشهر</button>
+                        <button class="filter-btn" onclick="updateSpendingChart('year', this)">سنة</button>
+                    </div>
+                </div>
+                <div class="chart-canvas-container">
+                    <canvas id="spendingChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-section">
+                <div class="chart-header">
+                    <div class="chart-title">🎯 توزيع أنواع الزوار</div>
+                </div>
+                <div class="chart-canvas-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-section">
+                <div class="chart-header">
+                    <div class="chart-title">📈 سلوك التصفح vs الشراء</div>
+                </div>
+                <div class="chart-canvas-container">
+                    <canvas id="behaviorChart"></canvas>
+                </div>
+            </div>
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-title">🛍️ فئة مفضلة</div>
+                    <div class="insight-text">أنت تفضل قسم الفساتين بنسبة 45% من إجمالي مشترياتك.</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">⏰ أفضل وقت للشراء</div>
+                    <div class="insight-text">معظم مشترياتك تتم يوم الجمعة بين الساعة ٧-٩ مساءً.</div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">💡 توفير محتمل</div>
+                    <div class="insight-text">إذا انتظرت العروض الموسمية، يمكنك توفير حتى ٢٠%.</div>
+                </div>
+            </div>
+            <div class="chart-section">
+                <div class="chart-title">📋 تفاصيل السلوك الشرائي</div>
+                <table class="behavior-table">
+                    <thead>
+                        <tr>
+                            <th>الفئة</th>
+                            <th>عدد الزيارات</th>
+                            <th>عدد المشتريات</th>
+                            <th>معدل التحويل</th>
+                            <th>الاتجاه</th>
+                        </tr>
+                    </thead>
+                    <tbody id="behavior-table-body">
+                        <tr>
+                            <td>فساتين</td>
+                            <td>45</td>
+                            <td>8</td>
+                            <td>17.8%</td>
+                            <td><span class="trend-indicator trend-up"><i class="fas fa-arrow-up"></i> صاعد</span></td>
+                        </tr>
+                        <tr>
+                            <td>بلوزات</td>
+                            <td>32</td>
+                            <td>5</td>
+                            <td>15.6%</td>
+                            <td><span class="trend-indicator trend-up"><i class="fas fa-arrow-up"></i> صاعد</span></td>
+                        </tr>
+                        <tr>
+                            <td>أحذية</td>
+                            <td>28</td>
+                            <td>3</td>
+                            <td>10.7%</td>
+                            <td><span class="trend-indicator trend-down"><i class="fas fa-arrow-down"></i> هابط</span></td>
+                        </tr>
+                        <tr>
+                            <td>حقائب</td>
+                            <td>15</td>
+                            <td>2</td>
+                            <td>13.3%</td>
+                            <td><span class="trend-indicator trend-up"><i class="fas fa-arrow-up"></i> صاعد</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="back-link" onclick="showPage('profile-page')">
+            <i class="fas fa-arrow-right"></i> رجوع للملف الشخصي
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer hidden" id="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ANALORA</h4>
+                <p>Style Meets Intelligence</p>
+                <p>أنا لورا، حيث يلتقي الأناقة بالذكاء</p>
+            </div>
+            <div class="footer-section">
+                <h4>روابط سريعة</h4>
+                <a href="#" onclick="event.preventDefault(); showPage('home-page')">الرئيسية</a>
+                <a href="#" onclick="event.preventDefault(); showPage('selection-page')">المجموعات</a>
+                <a href="#" onclick="event.preventDefault(); showPage('cart-page')">السلة</a>
+                <a href="#" onclick="event.preventDefault(); showPage('wishlist-page')">المفضلة</a>
+            </div>
+            <div class="footer-section">
+                <h4>تواصل معنا</h4>
+                <p><i class="fas fa-envelope"></i> hello@analora.com</p>
+                <p><i class="fas fa-phone"></i> +20 123 456 7890</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 Analora Store. جميع الحقوق محفوظة.
+        </div>
+    </footer>
+
+    <!-- ===== BOTTOM NAVIGATION ===== -->
+    <nav class="bottom-nav hidden" id="bottom-nav">
+        <div class="nav-item active" onclick="showPage('home-page')" data-page="home-page">
+            <i class="fas fa-home"></i>
+            <span>الرئيسية</span>
+        </div>
+        <div class="nav-item" onclick="showPage('women-page')" data-page="women-page">
+            <i class="fas fa-store"></i>
+            <span>المتجر</span>
+        </div>
+        <div class="nav-center-btn" onclick="showPage('analytics-page')">
+            <i class="fas fa-plus"></i>
+        </div>
+        <div class="nav-item" onclick="showPage('cart-page')" data-page="cart-page">
+            <i class="fas fa-shopping-bag"></i>
+            <span>السلة</span>
+        </div>
+        <div class="nav-item" onclick="showPage('profile-page')" data-page="profile-page">
+            <i class="fas fa-user"></i>
+            <span>حسابي</span>
+        </div>
+    </nav>
+
+    <!-- ===== THEME TOGGLE ===== -->
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
+    <!-- ===== SCRIPTS - ORDER IS CRITICAL ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/consumer-dataset.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/checkout.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
