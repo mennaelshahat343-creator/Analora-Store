@@ -4202,6 +4202,57 @@ const TRANSLATIONS = {
         "العربية": "Arabic",
         "العملة": "Currency",
         "العملة الافتراضية للعرض": "Default Display Currency",
+        "❌ لا يوجد بطاقة محفوظة": "❌ No saved card",
+        "❌ لا يوجد رقم محفوظ": "❌ No saved number",
+        "💳 سيتم إضافة طريقة دفع جديدة قريباً": "💳 A new payment method will be added soon",
+        "📞 سيتم الاتصال بخدمة العملاء": "📞 Customer service will be called",
+        "💬 سيتم فتح المحادثة": "💬 Chat will be opened",
+        "📧 سيتم فتح البريد": "📧 Email will be opened",
+        "✅ تم تسجيل الدخول بنجاح!": "✅ Login successful!",
+        "✅ تم إضافة المنتج للسلة!": "✅ Product added to cart!",
+        "👋 مرحباً بك كزائر! يمكنك التسوق الآن": "👋 Welcome guest! You can shop now",
+        "🔒 يرجى تسجيل الدخول أولاً للوصول لهذه الميزة": "🔒 Please log in first to access this feature",
+        "✅ تم حفظ الإعدادات بنجاح!": "✅ Settings saved successfully!",
+        "🗑️ تم مسح البيانات بنجاح": "🗑️ Data cleared successfully",
+        "✏️ سيتم فتح نموذج تعديل العنوان قريباً": "✏️ The edit address form will open soon",
+        "🗑️ تم حذف العنوان": "🗑️ Address deleted",
+        "➕ سيتم فتح نموذج إضافة عنوان جديد قريباً": "➕ Add new address form will open soon",
+        "🎉 تم تطبيق كود الخصم بنجاح!": "🎉 Discount code applied successfully!",
+        "❌ السلة فارغة!": "❌ Cart is empty!",
+        "🎉 تم إتمام طلبك بنجاح!": "🎉 Your order has been placed successfully!",
+        "❌ لم تقم بتسجيل الدخول": "❌ You are not logged in",
+        "👋 تم تسجيل الخروج بنجاح": "👋 You have been logged out successfully",
+        "❌ يرجى إدخال اسم المستخدم وكلمة المرور": "❌ Please enter username and password",
+        "❌ اسم المستخدم أو كلمة المرور غير صحيحة": "❌ Username or password is incorrect",
+        "❌ يرجى ملء جميع الحقول المطلوبة": "❌ Please fill in all required fields",
+        "❌ يرجى إدخال بريد إلكتروني صحيح": "❌ Please enter a valid email",
+        "❌ كلمة المرور يجب أن تكون ٦ أحرف على الأقل": "❌ Password must be at least 6 characters",
+        "❌ كلمتا المرور غير متطابقتين": "❌ Passwords do not match",
+        "❌ اسم المستخدم موجود بالفعل": "❌ Username already exists",
+        "❌ البريد الإلكتروني مستخدم بالفعل": "❌ Email is already in use",
+        "✅ تم إنشاء الحساب وتسجيل الدخول بنجاح!": "✅ Account created and logged in successfully!",
+        "✅ تم تحديث الاسم بنجاح!": "✅ Name updated successfully!",
+        "📩 تم إرسال تعليمات استعادة كلمة المرور إذا كان الحساب موجودًا": "📩 Password reset instructions sent if the account exists",
+        "❌ بريد إلكتروني غير صحيح": "❌ Invalid email",
+        "✅ تم تحديث بيانات الحساب": "✅ Account details updated",
+        "لا توجد بطاقات محفوظة": "No saved cards",
+        "لا يوجد رقم محفوظ": "No saved number",
+        "حذف": "Delete",
+        "❌ أدخل كود الخصم": "❌ Enter promo code",
+        "❌ كود خصم غير صالح": "❌ Invalid promo code",
+        "تم تطبيق خصم ": "Discount applied ",
+        "اختر اللون:": "Choose color:",
+        "شراء الآن": "Buy Now",
+        "أسود": "Black",
+        "كريمي": "Cream",
+        "وردي": "Pink",
+        "كحلي": "Navy",
+        "اللون:": "Color:",
+        "الكمية: ": "Qty: ",
+        "⚠️ هل أنت متأكد من مسح جميع بيانات التطبيق؟": "⚠️ Are you sure you want to clear all app data?",
+        "❌ هل أنت متأكد من حذف هذا العنوان؟": "❌ Are you sure you want to delete this address?",
+        "هل أنت متأكد من تسجيل الخروج؟": "Are you sure you want to log out?",
+        "ج.م": "EGP",
         "جنيه مصري (ج.م)": "Egyptian Pound (EGP)",
         "ريال سعودي (ر.س)": "Saudi Riyal (SAR)",
         "دولار أمريكي ($)": "US Dollar ($)",
@@ -6128,12 +6179,12 @@ function showProductDetail(gender, category, productId) {
                     ${formatPrice(item.price)} ${_t('ج.م')}
                 </div>
                 <div class="detail-desc">${getPDesc(item)}</div>
-                <div style="margin-bottom:10px; color:var(--light-brown); font-size:0.9rem;">اختر اللون:</div>
+                <div style="margin-bottom:10px; color:var(--light-brown); font-size:0.9rem;">${_t('اختر اللون:')}</div>
                 <div class="color-selector">
-                    <button class="color-swatch active" style="background:#111;" onclick="selectColor('أسود', this)" title="أسود"></button>
-                    <button class="color-swatch" style="background:#faf6f1;" onclick="selectColor('كريمي', this)" title="كريمي"></button>
-                    <button class="color-swatch" style="background:#c96d7f;" onclick="selectColor('وردي', this)" title="وردي"></button>
-                    <button class="color-swatch" style="background:#233d5a;" onclick="selectColor('كحلي', this)" title="كحلي"></button>
+                    <button class="color-swatch active" style="background:#111;" onclick="selectColor('أسود', this)" title="${_t('أسود')}"></button>
+                    <button class="color-swatch" style="background:#faf6f1;" onclick="selectColor('كريمي', this)" title="${_t('كريمي')}"></button>
+                    <button class="color-swatch" style="background:#c96d7f;" onclick="selectColor('وردي', this)" title="${_t('وردي')}"></button>
+                    <button class="color-swatch" style="background:#233d5a;" onclick="selectColor('كحلي', this)" title="${_t('كحلي')}"></button>
                 </div>
                 <div style="margin-bottom:10px; color:var(--light-brown); font-size:0.9rem;">${_t('اختر المقاس:')}</div>
                 <div class="size-selector">
@@ -6144,7 +6195,7 @@ function showProductDetail(gender, category, productId) {
                         <i class="fas fa-shopping-bag"></i> ${_t('أضف للسلة')}
                     </button>
                     <button class="btn-buy-now" onclick="buyNow('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, '${item.img}')">
-                        <i class="fas fa-bolt"></i> شراء الآن
+                        <i class="fas fa-bolt"></i> ${_t('شراء الآن')}
                     </button>
                     <button class="btn-wishlist-detail ${isWished ? 'active' : ''}" onclick="toggleWishlistFromDetail()">
                         <i class="fas fa-heart"></i> ${isWished ? _t('في المفضلة') : _t('أضف للمفضلة')}
@@ -6175,14 +6226,14 @@ function applyPromoCode() {
     const validCodes = { ANALORA25: 25, WELCOME10: 10, SUMMER50: 50 };
     promoDiscountPercent = validCodes[code] || 0;
     if (!code) {
-        if (message) message.textContent = 'اكتب كود الخصم أولًا';
+        if (message) message.textContent = _t('❌ أدخل كود الخصم');
         return;
     }
     if (!promoDiscountPercent) {
-        if (message) message.textContent = 'كود الخصم غير صالح';
+        if (message) message.textContent = _t('❌ كود خصم غير صالح');
         return;
     }
-    if (message) message.textContent = `تم تطبيق خصم ${promoDiscountPercent}%`;
+    if (message) message.textContent = `${_t('تم تطبيق خصم ')}${promoDiscountPercent}%`;
     updateCheckoutUI();
 }
 
@@ -6204,7 +6255,7 @@ function updateCheckoutUI() {
                 <img src="${item.img}" class="order-item-img" alt="${getPName(item)}">
                 <div class="order-item-info">
                     <div class="order-item-name">${getPName(item)}</div>
-                    <div class="order-item-meta">${_t('المقاس:')} ${item.size} | اللون: ${item.color || 'أسود'} | ${_t('الكمية: ')} ${item.qty}</div>
+                    <div class="order-item-meta">${_t('المقاس:')} ${item.size} | ${_t('اللون:')} ${_t(item.color || 'أسود')} | ${_t('الكمية: ')} ${item.qty}</div>
                 </div>
                 <div class="order-item-price">${formatPrice(item.price * item.qty)} ${_t('ج.م')}</div>
             </div>
