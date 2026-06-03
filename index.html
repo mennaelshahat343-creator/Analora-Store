@@ -8,6 +8,12 @@
     <meta name="description" content="متجر انالورا - حيث يلتقي الأناقة بالذكاء">
     <meta name="keywords" content="ملابس، أزياء، نسائي، رجالي، متجر أونلاين">
     <title>Analora Store - متجر انالورا</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#4a3728">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
@@ -116,15 +122,23 @@
             align-items: center;
         }
 
-        .header-icons i {
+        .header-icons i,
+        .install-btn {
             font-size: 1.2rem;
             cursor: pointer;
             color: var(--main-brown);
             transition: 0.3s;
             position: relative;
+            background: transparent;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
         }
 
-        .header-icons i:hover {
+        .header-icons i:hover,
+        .install-btn:hover {
             color: var(--light-brown);
             transform: scale(1.1);
         }
@@ -2944,6 +2958,9 @@
                 <button type="button" data-lang="ar" onclick="setLanguageInstant('ar')">AR</button>
                 <button type="button" data-lang="en" onclick="setLanguageInstant('en')">EN</button>
             </div>
+            <button id="install-btn" class="install-btn" hidden title="تثبيت التطبيق">
+                <i class="fas fa-download"></i>
+            </button>
             <i class="fas fa-search" onclick="toggleSearch()" title="بحث"></i>
             <i class="fas fa-heart" onclick="showPage('wishlist-page')" title="قائمة المفضلة">
                 <span class="wish-count" id="wish-count">0</span>
@@ -6352,17 +6369,55 @@ document.addEventListener('DOMContentLoaded', () => {
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker.js')
-            .then(function (reg) { console.log('SW registered:', reg.scope); })
+            .then(function (reg) {
+                console.log('SW registered:', reg.scope);
+                if (reg.waiting) {
+                    showToast('🔄 تحديث جديد جاهز. أعد فتح التطبيق.');
+                }
+                reg.addEventListener('updatefound', () => {
+                    const newWorker = reg.installing;
+                    if (newWorker) {
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                showToast('🔄 تحديث جديد جاهز. أعد فتح التطبيق.');
+                            }
+                        });
+                    }
+                });
+            })
             .catch(function (err) { console.log('SW registration failed:', err); });
     }
 
     // Register PWA install prompt
     let deferredPrompt;
+    const installBtn = document.getElementById('install-btn');
+
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        console.log('PWA install available');
+        if (installBtn) {
+            installBtn.hidden = false;
+            installBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const choiceResult = await deferredPrompt.userChoice;
+                if (choiceResult.outcome === 'accepted') {
+                    showToast('🎉 تم تثبيت التطبيق');
+                } else {
+                    showToast('❌ تم إلغاء التثبيت');
+                }
+                installBtn.hidden = true;
+                deferredPrompt = null;
+            }, { once: true });
+        }
+        showToast('✅ التطبيق جاهز للتثبيت');
     });
+
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            showToast('🔄 تم تحديث التطبيق. أعد فتحه للحصول على النسخة الأحدث');
+        });
+    }
 
     // Apply language on load
     if (appSettings.language === 'en') {

@@ -1,0 +1,18 @@
+{
+  "name": "Analora Store",
+  "short_name": "Analora",
+  "description": "متجر انالورا - تسوق الأزياء بسهولة من هاتفك.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f0eb",
+  "theme_color": "#4a3728",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
